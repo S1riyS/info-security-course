@@ -130,27 +130,29 @@ whoami /groups
 
 == Правило 1. Разрешения файла и папки
 
-Разрешения файла при определении доступа важнее разрешений папки. Пользователю stud на папку установлен запрет доступа, на файл `README.TXT` внутри неё — чтение. Обращение по полному имени должно открыть файл, даже если каталог просмотреть нельзя.
+На папку `NOACCESS` для `stud` поставлен запрет чтения, только для этой папки. На `README.TXT` для `stud` разрешено чтение.
 
-```
-notepad E:\NOACCESS\README.TXT
+#figure(
+  image("images/5_noaccess_acl.png", width: 90%),
+  caption: [Запрет stud на папку NOACCESS],
+)
+
+#figure(
+  image("images/6_readme_acl.png", width: 90%),
+  caption: [Чтение stud для README.TXT],
+)
+
+Из окна `stud` каталог не читается. Файл по полному пути открывается, в нём строка `rule1`.
+
+```bash
+dir D:\lab2\NOACCESS
+notepad D:\lab2\NOACCESS\README.TXT
 ```
 
 #figure(
-  {
-    set text(size: 12pt)
-    table(
-      columns: (1.2fr, 1.4fr, 1.2fr, 1.6fr),
-      align: (left, left, left, left),
-      table.header([*Объект*], [*Кому*], [*Разрешение*], [*Результат*]),
-      [`NOACCESS`], [stud], [No Access], [—],
-      [`README.TXT`], [stud], [Read], [—],
-    )
-  },
-  caption: [Разрешения для проверки приоритета файла над папкой],
+  image("images/7_rule1_access.png", width: 75%),
+  caption: [Проверка доступа от stud],
 )
-
-#emph[Описать две попытки: открыть папку в Проводнике и открыть файл по полному пути. No Access в Windows 10 — явный запрет (Deny), а не просто снятые разрешения: без запрета обход по полному пути нечем показать.]
 
 == Правило 2. Накопление разрешений
 
