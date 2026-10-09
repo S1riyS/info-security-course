@@ -65,7 +65,48 @@
 
 = Ход работы
 
-#emph[Указать версию Windows, несистемный том NTFS, учётные записи и как выполнялись действия от имени stud (отдельный сеанс или `runas`). На `C:\` права не ставить: пример `C:\NOACCESS` из задания перенести на этот том.]
+Работа выполнена в Windows 10.0.19045.6456. Проверки доступа выполняются от локального пользователя `stud` в отдельном окне `cmd`.
+
+== Подготовка
+
+Пользователь `stud` создан. Учётная запись активна и входит в группу «Пользователи».
+
+```bash
+net user stud * /add
+net user stud
+```
+
+#figure(
+  image("images/1_stud_account.png", width: 70%),
+  caption: [Создание учётной записи stud],
+)
+
+#pagebreak()
+
+Учётная запись «Администратор» включена, пароль задан.
+
+```bash
+Enable-LocalUser -Name 'Администратор'
+Set-LocalUser -Name 'Администратор' -Password (Read-Host -AsSecureString)
+```
+
+#figure(
+  image("images/2_administrator.png", width: 100%),
+  caption: [Включение учётной записи Администратор],
+)
+
+Окно `cmd` запущено от имени `stud`. `whoami` показал `desktop-bcv3lvn\stud`, среди групп — «Все» и «Пользователи».
+
+```bash
+runas /user:stud "cmd /k"
+whoami
+whoami /groups
+```
+
+#figure(
+  image("images/3_runas_whoami.png", width: 80%),
+  caption: [Окно cmd от имени stud],
+)
 
 == Иерархия каталогов
 
