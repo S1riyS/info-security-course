@@ -7,6 +7,14 @@
 #show heading: set par(first-line-indent: 0pt)
 
 #show raw: set text(font: "Liberation Mono", size: 11pt)
+#let source(path, lang) = block(
+  fill: luma(240),
+  stroke: 0.5pt + luma(180),
+  inset: 10pt,
+  radius: 4pt,
+  below: 1.5em,
+  raw(read(path), lang: lang, block: true),
+)
 
 // Титульный лист
 
@@ -65,7 +73,8 @@
 
 = Ход работы
 
-Работа выполнена в Windows 10.0.19045.6456. Проверки доступа выполняются от локального пользователя `stud` в отдельном окне `cmd`.
+- Работа выполнена в Windows 10.0.19045.6456
+- Проверки доступа выполняются от локального пользователя `stud` в отдельном окне `cmd`
 
 == Подготовка
 
@@ -110,18 +119,14 @@ whoami /groups
 
 == Иерархия каталогов
 
-На томе NTFS создано дерево каталогов с файлами разных расширений. Файлы `*.exe` есть в иерархии: они нужны для замены разрешений через `cacls`.
+Дерево создано на томе `D:` (NTFS). В нём есть файлы `.txt`, `.log` и `.exe`. Папка `owned` оставлена пустой.
 
-#emph[Вставить вывод `tree /F`. Скриншот — в `images/`, затем раскомментировать figure.]
+#source("scripts/tree.bat", "bash")
 
-```
-E:\lab2
-```
-
-// #figure(
-//   image("images/tree.png", width: 90%),
-//   caption: [Иерархия каталогов и файлов],
-// )
+#figure(
+  image("images/4_tree.png", width: 60%),
+  caption: [Иерархия каталогов и файлов -- `tree D:\lab2 /F`],
+)
 
 == Правило 1. Разрешения файла и папки
 
