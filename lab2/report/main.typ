@@ -264,11 +264,44 @@ owned by stud
   caption: [Владелец папки stud-dir до смены -- stud],
 )
 
-Учётная запись с Full Control на родительскую папку сменила владельца кнопкой «Изменить» в дополнительных параметрах безопасности: владельцем `stud-dir` стала `Dingovina`.
+Во второй части правила демонстрируется самостоятельный захват владения: `Dingovina` не передавались никакие права, кроме одного -- особого разрешения «Смена владельца» (Take ownership, в `icacls` -- `(WO)`). Наследование на `stud-dir` отключено, в списке доступа оставлены ровно две записи, владелец по-прежнему `stud`:
+
+```bash
+icacls D:\lab2\owned\stud-dir /inheritance:r /grant "stud:F" "Dingovina:(WO)"
+icacls D:\lab2\owned\stud-dir
+D:\lab2\owned\stud-dir JARVIS-ONE-6\Dingovina:(WO)
+                       JARVIS-ONE-6\stud:(F)
+powershell -NoProfile -c "(Get-Acl 'D:\lab2\owned\stud-dir').Owner"
+JARVIS-ONE-6\stud
+```
 
 #figure(
-  image("images/15_rule4_owner_changed.png", width: 95%),
-  caption: [Владелец папки stud-dir после смены -- Dingovina],
+  image("images/18_wo_acl.png", width: 100%),
+  caption: [Список доступа stud-dir: у Dingovina единственное право -- (WO) «Смена владельца»; владелец ещё stud],
+)
+
+Из своего сеанса `Dingovina` объект выглядит «без прав»: вкладка «Безопасность» сообщает, что для просмотра свойств нужны разрешения на чтение, а в дополнительных параметрах безопасности вместо имени владельца -- «Не удалось отобразить текущего владельца». `Dingovina` не видит даже, кто владелец, поэтому «получить» владение от исходного владельца не могла -- его можно только забрать.
+
+#figure(
+  image("images/19_wo_only_security_tab.png", width: 60%),
+  caption: [Свойства stud-dir от имени Dingovina: прав на чтение нет],
+)
+
+#figure(
+  image("images/20_cannot_display_owner.png", width: 85%),
+  caption: [Дополнительные параметры безопасности: текущий владелец для Dingovina не отображается],
+)
+
+Кнопка «Изменить» рядом со строкой владельца меняет владельца без каких-либо дополнительных разрешений: достаточно права Take ownership. Владельцем становится `Dingovina`; Windows сразу предлагает новому владельцу заменить разрешения и выдать себе полный доступ, что и сделано.
+
+#figure(
+  image("images/21_take_owner_confirm.png", width: 95%),
+  caption: [Dingovina сменила владельца кнопкой «Изменить»; Windows предлагает новому владельцу выдать себе полный доступ],
+)
+
+#figure(
+  image("images/22_dingovina_owner.png", width: 60%),
+  caption: [Итог: Dingovina -- владелец stud-dir с полным доступом],
 )
 
 #figure(
@@ -279,7 +312,7 @@ owned by stud
       align: (left, left, left),
       table.header([*Кто*], [*Как стал владельцем*], [*Что смог сделать*]),
       [stud], [создал объект], [стал владельцем; виден в `dir /Q`],
-      [Dingovina], [Full Control на родителе, «Изменить» владельца], [стала владельцем `stud-dir`],
+      [Dingovina], [только Take ownership: забрала владение сама, кнопкой «Изменить»], [стала владельцем `stud-dir`, затем выдала себе Full Control],
       [владелец (stud)], [No Access на объекте не помеха], [изменил список доступа, вернул себе доступ],
     )
   },
